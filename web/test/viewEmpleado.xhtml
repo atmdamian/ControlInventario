@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>EMPLEADOS</title>
+        <h:outputStylesheet library="css" name="estilos.css"  />
+    </h:head>
+    <h:body>
+        
+        
+              
+        <h:form id="dialogoForm" prependId="false">
+            <p:dialog header="Agregar Empleado" widgetVar="empleadoDialogo" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="empleadoDetalle" style="text-align:center;">
+                    <p:panelGrid  columns="2" columnClasses="label,value"   >
+                        
+                        <h:outputLabel value="Ife:" for="ife" />
+                    <h:inputText id="ife" value="#{empleadoController.empleado.ife}" title="Ife" required="true" requiredMessage="The Ife field is required."/>
+                    <h:outputLabel value="NombrePila:" for="nombrePila" />
+                    <h:inputText id="nombrePila" value="#{empleadoController.empleado.nombrePila}" title="NombrePila" />
+                    <h:outputLabel value="ApellidoPat:" for="apellidoPat" />
+                    <h:inputText id="apellidoPat" value="#{empleadoController.empleado.apellidoPat}" title="ApellidoPat" />
+                    <h:outputLabel value="ApellidoMat:" for="apellidoMat" />
+                    <h:inputText id="apellidoMat" value="#{empleadoController.empleado.apellidoMat}" title="ApellidoMat" />
+                    <h:outputLabel value="Puesto:" for="puesto" />
+                    <h:inputText id="puesto" value="#{empleadoController.empleado.puesto}" title="Puesto" />
+                        <h:outputText value="Edad"/>
+                        <p:selectOneMenu value="#" style="width:125px" >
+                            <f:selectItem itemValue="20" itemLabel="20"/>
+                            <f:selectItem itemValue="21" itemLabel="21"/>
+                        </p:selectOneMenu>    
+                        
+                        
+                        <h:outputText value="Sexo" />
+                        <p:selectOneRadio value="#">
+                            <f:selectItem itemValue="M" itemLabel="M"/>
+                            <f:selectItem itemValue="F" itemLabel="F" />
+                        </p:selectOneRadio>    
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Agregar" actionListener="#{empleadoController.insert()}" />
+                        </f:facet>
+
+                    </p:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        
+        
+        
+        
+        
+        
+        
+        
+         <h:form prependId="false" id="form">
+
+            <p:growl id="messages" showDetail="true" />
+            <p:messages />
+            <p:dataTable 
+                id="empleados" 
+                var="empleado" 
+                value="#{empleadoController.findAll()}" 
+                editable="true" 
+                rowKey="#{empleado.ife}"
+                selection="#{empleadoBean.empleadoSeleccionada}" 
+                selectionMode="single">
+
+                <f:facet name="header">  
+                    Lista de Empleados  
+                </f:facet>
+
+                <p:column headerText="IFE">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{empleado.ife}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{empleado.ife}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Nombre">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{empleado.nombrePila}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{empleado.nombrePila}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Apellido Paterno">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{empleado.apellidoPat}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{empleado.apellidoPat}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Apellido Materno">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{empleado.apellidoMat}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{empleado.apellidoMat}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Puesto">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{empleado.puesto}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{empleado.puesto}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <f:facet name="footer">
+                    <p:commandButton value="Regresar" action="index" />
+                    <p:spacer height="5px;"/>
+                    <p:commandButton value="Agregar" actionListener="#{empleadoBean.reiniciarEmpleadoSeleccionada()}" oncomplete="PF('empleadoDialogo').show();" update="empleados">
+                        <p:ajax event="dialogReturn" update="empleados"/>
+                    </p:commandButton>
+                </f:facet>
+
+               
+
+            </p:dataTable>
+            <p:contextMenu for="empleados">
+                <p:menuitem value="Eliminar" update="empleados" icon="ui-icon-close" actionListener="#{empleadoController.delete(empleado)}" ajax="false"/>
+            </p:contextMenu>
+        </h:form>
+
+
+       
+
+
+               
+
+    </h:body>
+</html>
+
